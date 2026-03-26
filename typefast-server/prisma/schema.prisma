@@ -1,0 +1,34 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  username     String   @unique
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+  scores       Score[]
+}
+
+model Score {
+  id         Int      @id @default(autoincrement())
+  wpm        Int
+  rawWpm     Int
+  accuracy   Float
+  mode       String   // 'time' or 'quote'
+  duration   Int?     // null for quote mode
+  difficulty String   // 'easy', 'medium', 'hard'
+  createdAt  DateTime @default(now())
+  userId     Int
+  user       User     @relation(fields: [userId], references: [id])
+
+  @@index([mode, duration, difficulty])
+  @@index([userId])
+  @@index([wpm(sort: Desc)])
+}
