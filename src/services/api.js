@@ -1,3 +1,5 @@
+const API_URL = import.meta.env.VITE_API_URL || '';
+
 const getHeaders = () => {
   const token = localStorage.getItem('typefast-token');
   return {
@@ -17,7 +19,7 @@ const handleResponse = async (response) => {
 export const api = {
   // Auth
   register: async (username, email, password) => {
-    const res = await fetch('/api/auth/register', {
+    const res = await fetch(`${API_URL}/api/auth/register`, {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify({ username, email, password }),
@@ -26,7 +28,7 @@ export const api = {
   },
 
   login: async (email, password) => {
-    const res = await fetch('/api/auth/login', {
+    const res = await fetch(`${API_URL}/api/auth/login`, {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify({ email, password }),
@@ -35,14 +37,14 @@ export const api = {
   },
 
   getMe: async () => {
-    const res = await fetch('/api/auth/me', {
+    const res = await fetch(`${API_URL}/api/auth/me`, {
       headers: getHeaders(),
     });
     return handleResponse(res);
   },
 
   updateMe: async (data) => {
-    const res = await fetch('/api/auth/me', {
+    const res = await fetch(`${API_URL}/api/auth/me`, {
       method: 'PUT',
       headers: getHeaders(),
       body: JSON.stringify(data),
@@ -52,7 +54,7 @@ export const api = {
 
   // Scores
   submitScore: async (data) => {
-    const res = await fetch('/api/scores', {
+    const res = await fetch(`${API_URL}/api/scores`, {
       method: 'POST',
       headers: getHeaders(),
       body: JSON.stringify(data),
@@ -61,7 +63,7 @@ export const api = {
   },
 
   getPersonalBests: async () => {
-    const res = await fetch('/api/scores/personal-best', {
+    const res = await fetch(`${API_URL}/api/scores/personal-best`, {
       headers: getHeaders(),
     });
     return handleResponse(res);
@@ -69,7 +71,7 @@ export const api = {
 
   // Leaderboard
   getLeaderboard: async ({ mode, duration, difficulty }) => {
-    let url = `/api/leaderboard?mode=${mode}`;
+    let url = `${API_URL}/api/leaderboard?mode=${mode}`;
     if (mode === 'time' && duration) url += `&duration=${duration}`;
     if (difficulty) url += `&difficulty=${difficulty}`;
 
@@ -80,7 +82,7 @@ export const api = {
   },
 
   getAllLeaderboard: async (limit = 50) => {
-    const res = await fetch(`/api/leaderboard/all?limit=${limit}`, {
+    const res = await fetch(`${API_URL}/api/leaderboard/all?limit=${limit}`, {
       headers: getHeaders(),
     });
     return handleResponse(res);
